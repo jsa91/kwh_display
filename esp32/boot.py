@@ -80,5 +80,5 @@ else:
     import sys
     from ftp import uftpd
 
-    print("Config file missing. Access the through FTP to manage filesystem.")
+    print("Config file missing. Access through FTP to manage filesystem.")
     sys.exit()
