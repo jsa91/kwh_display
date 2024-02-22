@@ -44,11 +44,59 @@ IO12  MISO
 
 <!---BILD-->
 
-## How To
+## How-to
 
-TBD
+Begin by erasing the flash on the ESP32.
 
-## Known limitations 
+```
+esptool.py --port /dev/ttyUSB0 erase_flash
+```
 
-TBD
+Deploy MicroPython firmware onto the board.
+
+```
+esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 ESP32_GENERIC-20231227-v1.22.0.bin
+```
+
+Clone the repository and edit ```/kwh_display/esp32/config.json``` to match your preferred settings.
+
+**Please note that your WiFi password will be stored in plain text. Proceed with caution.**
+```python
+{
+  "ssid": "YourSSID",
+  "password": "YourPassword",
+  "zone": "SE3", # Bidding area
+  "url": "http://www.elprisetjustnu.se",
+  "api": "/api/v1/prices/"
+}
+```
+Enter ```rshell``` and connect to the ESP32.
+
+```
+connect serial /dev/ttyUSB0
+```
+
+From ```kwh_display>```, copy the contents of ```esp32/``` onto the board.
+```
+rsync -a esp32/. /pyboard/
+```
+
+Start the display by typing ```repl``` followed by ```Ctrl+D```, or by repowering the device.
+
+
+## Alternative Handling of Config File
+If properties of the ```config.json``` are currently unknown or if you need to add the file later, you can do so using FTP.
+
+Ensure you delete ```config.json``` from ```/kwh_display/esp32/``` before copying the contents of ```esp32/``` onto the board.
+
+When the display boots without the config file present, it will deploy a hotspot with SSID ```kwh_display``` and FTP file server functionality. Access the file server in your preferred way at ```ftp://192.168.4.1/```. After adding the config file to the file system, repower the device.
+
+
+
+## Known Limitations
+
+Due to memory allocation limitations, the display will reboot itself daily at 14:00 CET to fetch updated electricity prices. Additionally, the display may sometimes encounter difficulty starting after copying the repository onto the board for the first time. If this occurs, try restarting the device.
+
+Hopefully, these issues will be addressed in the future by implementing a [manifest](https://docs.micropython.org/en/latest/reference/manifest.html) file.
+
 
