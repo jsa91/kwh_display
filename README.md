@@ -38,7 +38,7 @@ IO13  MOSI
 IO12  MISO
 ```
 
-![24-02-28 20-20-07 0804](https://github.com/jsa91/kwh_display/assets/16693471/14923224-4c99-4357-8b9c-b951d191861c)
+![24-02-28 20-20-07 0804](https://github.com/jsa91/kwh_display/assets/16693471/14923224-4c99-4357-8b9c-b951d191861c =450x600)
 
 ## Casing
 
