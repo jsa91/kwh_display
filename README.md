@@ -81,8 +81,7 @@ From ```kwh_display>```, copy the contents of ```esp32/``` onto the board.
 rsync -a esp32/. /pyboard/
 ```
 
-Start the display by typing ```repl``` followed by ```Ctrl+D```, or by repowering the device.
-
+Start the display by typing ```repl``` followed by ```Ctrl+D```, or by repowering the device. 
 
 ## Alternative Handling of Config File
 If properties of the ```config.json``` are currently unknown or if you need to add the file later, you can do so using FTP.
@@ -95,8 +94,9 @@ When the display boots without the config file present, it will deploy a hotspot
 
 ## Known Limitations
 
-Due to memory allocation limitations, the display will reboot itself daily at 14:00 CET to fetch updated electricity prices. Additionally, the display may sometimes encounter difficulty starting after copying the repository onto the board for the first time. If this occurs, try restarting the device.
-
+Due to memory allocation limitations, the display will reboot itself daily at 14:00 CET to fetch updated electricity prices.
 Hopefully, these issues will be addressed in the future by implementing a [manifest](https://docs.micropython.org/en/latest/reference/manifest.html) file.
 
+As of now, it is not possible to adjust the offset price according to power tariffs. Hopefully, this feature will be added in the future.
 
+For maintenance and debugging a WebREPL server can be accessible at ```http://<device-ip>:8266/``` with password ```webrepl```. To conserve memory this server is disabled by default but can be enabled in ```boot.py``` file.

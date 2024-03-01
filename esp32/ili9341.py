@@ -22,7 +22,7 @@ class GUI:
         """
         Constructor
         """
-        y_axis_division = [254, 230, 207, 184, 160]
+        y_axis_division = [249, 225, 202, 179, 155]
         x_axis_division = [15, 30, 48, 66, 83, 98, 115, 133, 150, 168, 186, 204]
         arrows_division = [
             15,
@@ -64,29 +64,29 @@ class GUI:
         )
         Label(
             CWriter(self.ssd, arial10, RED, BLACK, verbose=False),
-            123,
-            155,
+            122,
+            153,
             "Idag",
             align=2,
         )
         Label(
             CWriter(self.ssd, arial10, YELLOW, BLACK, verbose=False),
-            123,
-            185,
+            122,
+            183,
             "Imorgon",
             align=2,
         )
         Label(
             CWriter(self.ssd, freesans20, WHITE, BLACK, verbose=False),
             90,
-            163,
+            158,
             "kr/kWh",
             align=2,
         )
         self.wri = CWriter(ssd, arial10, WHITE, BLACK, verbose=False)
         self.graph = CartesianGraph(
             self.wri,
-            140,
+            135,
             15,
             xorigin=12,
             yorigin=2,
@@ -102,26 +102,26 @@ class GUI:
         self.color_label = Label(
             CWriter(self.ssd, arial35, GREEN, BLACK, verbose=False),
             40,
-            110,
+            105,
             "Normalt",
             align=2,
         )
         self.price_label = Label(
             CWriter(self.ssd, freesans20, WHITE, BLACK, verbose=False),
             90,
-            120,
+            115,
             "0.00",
             align=2,
         )
 
         for x_label, x_axis_division in enumerate(x_axis_division):
-            Label(self.wri, 294, x_axis_division, str((x_label * 2)), align=2)
+            Label(self.wri, 289, x_axis_division, str((x_label * 2)), align=2)
 
         for y_label, y_axis_division in enumerate(y_axis_division):
             Label(self.wri, y_axis_division, 4, str((y_label)), align=2)
 
         for hour, arrow in enumerate(arrows_division):
-            arrow_label = Label(self.wri, 284, arrow, "^", fgcolor=BLACK, align=2)
+            arrow_label = Label(self.wri, 279, arrow, "^", fgcolor=BLACK, align=2)
             self.arrows[f"arrow_{hour}"] = arrow_label
 
     def plot_prices(self, prices_today: dict, prices_tomorrow: dict):
@@ -220,7 +220,7 @@ class GUI:
         )
 
         dial = Dial(
-            self.wri, 30, 15, height=90, ticks=12, bdcolor=WHITE, label=90, pip=False
+            self.wri, 25, 15, height=90, ticks=12, bdcolor=WHITE, label=90, pip=False
         )
         hrs = Pointer(dial)
         mins = Pointer(dial)

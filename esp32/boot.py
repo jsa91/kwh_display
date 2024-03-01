@@ -72,7 +72,7 @@ def ntp():
 if "config.json" in os.listdir():
     wifi()
     ntp()
-    webrepl.start()  # Start webrepl with password 'timerepl'
+    # webrepl.start()  # Enable for webrepl debugging
     gc.collect()
     print(f"Free memory after running gc.collect(): {gc.mem_free()}")
 else:
