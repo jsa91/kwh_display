@@ -1,4 +1,4 @@
-# kwh_display (under development)
+# kwh_display
 
 *kwh_display* is a project developed in MicroPython aimed at creating a compact display solution using an ESP32 and an ILI9341 screen. The primary functionality of this project is to fetch electricity price data via API and display it on the screen.
 
@@ -101,3 +101,5 @@ Hopefully, these issues will be addressed in the future by implementing a [manif
 As of now, it is not possible to adjust the offset price according to power tariffs. Hopefully, this feature will be added in the future.
 
 For maintenance and debugging a WebREPL server can be accessible at ```http://<device-ip>:8266/``` with password ```webrepl```. To conserve memory this server is disabled by default but can be enabled in ```boot.py``` file.
+
+If there arises a need to change the WiFi SSID and password in the config file, it's recommended to reflash the device firmware and then make changes.
