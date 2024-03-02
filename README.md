@@ -12,7 +12,8 @@
 
 This project aims to provide a standalone solution for monitoring electricity prices without relying on external servers or services.
 
-<!---BILD-->
+![24-03-02 19-38-48 0812](https://github.com/jsa91/kwh_display/assets/16693471/be913ed0-f84e-4f39-ac5a-eae66da9ebe4)
+
 
 ## ESP32
 
