@@ -2,6 +2,8 @@
 
 *kwh_display* is a project developed in MicroPython aimed at creating a compact display solution using an ESP32 and an ILI9341 screen. The primary functionality of this project is to fetch electricity price data via API and display it on the screen.
 
+![24-03-02 19-38-48 0812](https://github.com/jsa91/kwh_display/assets/16693471/be913ed0-f84e-4f39-ac5a-eae66da9ebe4)
+
 ## Features
 
 - Fetches electricity price data daily at 14:00 CET from the [Elpriset just nu](https://www.elprisetjustnu.se/elpris-api) API.
@@ -11,9 +13,6 @@
 - Inspired by the project [PowerDisplayESPHome](https://github.com/johannyren/PowerDisplayESPHome) but developed without any backend dependencies.
 
 This project aims to provide a standalone solution for monitoring electricity prices without relying on external servers or services.
-
-![24-03-02 19-38-48 0812](https://github.com/jsa91/kwh_display/assets/16693471/be913ed0-f84e-4f39-ac5a-eae66da9ebe4)
-
 
 ## ESP32
 
