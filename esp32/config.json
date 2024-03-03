@@ -1,7 +1,7 @@
 {
   "ssid": "MySSID",
   "password": "MyPassword",
-  "zone": "SE2",
+  "zone": "SE3",
   "url": "http://www.elprisetjustnu.se",
   "api": "/api/v1/prices/"
 }
