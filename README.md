@@ -47,7 +47,7 @@ IO12  MISO
 
 ## How-to
 
-Begin by erasing the flash on the ESP32.
+Begin by erasing the flash on the ESP32 using [esptool](https://github.com/espressif/esptool).
 
 ```
 esptool.py --port /dev/ttyUSB0 erase_flash

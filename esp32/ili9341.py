@@ -153,10 +153,10 @@ class GUI:
         """
         price_levels = ("Billigt", "Normalt", "Dyrt")
 
-        if prices_today[current_hour] < 1:
+        if prices_today[current_hour] < 0.5:
             color = GREEN
             price = price_levels[0]
-        elif 1 <= prices_today[current_hour] < 3:
+        elif 0.5 <= prices_today[current_hour] < 1.5:
             color = YELLOW
             price = price_levels[1]
         else:

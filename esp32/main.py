@@ -16,7 +16,7 @@ def main():
     """
 
     api = ElectricityPriceAPI()
-    api.get_prices()
+    api.get_prices()  # TODO: If prices fails to fetch @ 14.00, what happens @ 00.00?
 
     gc.collect()
     print(f"Free memory after running gc.collect(): {gc.mem_free()}")
