@@ -2,7 +2,7 @@
 
 *kwh_display* is a project developed in MicroPython aimed at creating a compact display solution using an ESP32 and an ILI9341 screen. The primary functionality of this project is to fetch electricity price data via API and display it on the screen.
 
-BILD
+![kwh_display](https://github.com/user-attachments/assets/ac35568e-17c2-4a92-991a-805e1c3b35c9)
 
 ## Features
 
