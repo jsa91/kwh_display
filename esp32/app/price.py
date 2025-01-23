@@ -2,10 +2,10 @@
 Instantiates class to fetch spot prices.
 """
 
+from datetime import datetime, timedelta, timezone
 import urequests
 import ujson
 import machine
-from datetime import datetime, timedelta, timezone
 
 DAYS = (
     datetime.now(timezone(timedelta())),

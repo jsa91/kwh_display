@@ -6,19 +6,13 @@
 
 ## Features
 
-- Fetches electricity price data daily at 14:00 CET from the [Elpriset just nu](https://www.elprisetjustnu.se/elpris-api) API.
+- Fetches electricity price data daily when available from an API <span style="float: right;"><a href="https://www.elprisetjustnu.se"><img src="https://ik.imagekit.io/ajdfkwyt/hva-koster-strommen/elpriser-tillhandahalls-av-elprisetjustnu_ttNExOIU_.png" alt="Elpriser tillhandahålls av Elpriset just nu.se" width="200" height="45"></a></span>.
+- Inspired by the project [PowerDisplayESPHome](https://github.com/johannyren/PowerDisplayESPHome) but developed without any backend dependencies.
 - Displays the current day's price alongside tomorrow's price.
 - Shows the electricity price in kWh/SEK for the current hour.
 - Allows users to select a bidding area (SE 1-4) according to their preference.
-- Inspired by the project [PowerDisplayESPHome](https://github.com/johannyren/PowerDisplayESPHome) but developed without any backend dependencies.
 
-This project aims to provide a standalone solution for monitoring electricity prices without relying on external servers or services.
-
-## ESP32
-
-To use this repository, start by flashing the ESP32 with [MicroPython](https://docs.MicroPython.org/en/latest/esp32/tutorial/intro.html). The latest tested firmware build is `ESP32_GENERIC-20231227-v1.22.0.bin`.
-
-For convenient file management and the ability to copy to and from the ESP32, consider using [rshell](https://github.com/dhylands/rshell). It also doubles as a terminal emulator and provides access to the regular REPL.
+This project aims to provide a standalone solution for monitoring electricity prices without relying on external services.
 
 ## ILI9341
 
@@ -43,21 +37,18 @@ IO12  MISO
 
 ```/kwh_display/casing``` holds two STL files avalible for 3D printing the display casing.
 
-## How-to
+## ESP32
 
-Begin by erasing the flash on the ESP32 using [esptool](https://github.com/espressif/esptool).
+To use *kwh_display*, start by cloning and then flashing the ESP32 with firmware `build-ESP32_GENERIC_250123.bin`, which is compiled from the [MicroPython](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) repository.
 
-```
-esptool.py --port /dev/ttyUSB0 erase_flash
-```
 
-Deploy MicroPython firmware onto the board.
+Erase and the flash the ESP32 using [esptool](https://github.com/espressif/esptool).
 
 ```
-esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 ESP32_GENERIC-20231227-v1.22.0.bin
+esptool.py --port /dev/ttyUSB0 erase_flash && esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 build-ESP32_GENERIC_250123.bin
 ```
 
-Clone the repository and edit ```/kwh_display/esp32/config.json``` to match your preferred settings.
+Edit ```/kwh_display/config.json``` to match your preferred settings.
 
 **Please note that your WiFi password will be stored in plain text. Proceed with caution.**
 ```python
@@ -69,35 +60,10 @@ Clone the repository and edit ```/kwh_display/esp32/config.json``` to match your
   "api": "/api/v1/prices/"
 }
 ```
-Enter ```rshell``` and connect to the ESP32.
 
-```
-connect serial /dev/ttyUSB0
-```
-
-From ```kwh_display>```, copy the contents of ```esp32/``` onto the board.
-```
-rsync -a esp32/. /pyboard/
-```
-
-Start the display by typing ```repl``` followed by ```Ctrl+D```, or by repowering the device. 
-
-## Alternative Handling of Config File
-If properties of the ```config.json``` are currently unknown or if you need to add the file later, you can do so using FTP.
-
-Ensure you delete ```config.json``` from ```/kwh_display/esp32/``` before copying the contents of ```esp32/``` onto the board.
-
-When the display boots without the config file present, it will deploy a hotspot with SSID ```kwh_display``` and FTP file server functionality. Access the file server in your preferred way at ```ftp://192.168.4.1/```. After adding the config file to the file system, repower the device.
-
+When the *kwh_display*  boots for the first time it will deploy a hotspot with the SSID `kwh_display` and host an FTP file server. Access the file server using your preferred method at `ftp://192.168.4.1/`. After adding `config.json` to the root of the file system, repower the device.
 
 
 ## Known Limitations
 
-Due to memory allocation limitations, the display will reboot itself daily at 14:00 CET to fetch updated electricity prices.
-Hopefully, these issues will be addressed in the future by implementing a [manifest](https://docs.micropython.org/en/latest/reference/manifest.html) file.
-
 As of now, it is not possible to adjust the offset price according to power tariffs. Hopefully, this feature will be added in the future.
-
-For maintenance and debugging a WebREPL server can be accessible at ```http://<device-ip>:8266/``` with password ```webrepl```. To conserve memory this server is disabled by default but can be enabled in ```boot.py``` file.
-
-If there arises a need to change the WiFi SSID and password in the config file, it's recommended to reflash the device firmware and then make changes.

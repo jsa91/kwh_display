@@ -9,12 +9,12 @@ This module includes functions to:
 - Update the display with current prices
 """
 
+from datetime import timedelta
 import ujson
 import network
 import ntptime
 import machine
 import urequests
-from datetime import timedelta
 
 
 def wifi():
@@ -65,10 +65,7 @@ def ntp_sync():
             return
         except OSError as e:
             print(f"Failed to sync time: {e}")
-    else:
-        print("Time synchronization failed, resetting...")
-        machine.soft_reset()
-
+            machine.soft_reset()
 
 def fetch_prices_from_file(api, time):
     # type: (ElectricityPriceAPI, SweTime) -> tuple
