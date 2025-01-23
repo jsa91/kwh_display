@@ -37,7 +37,7 @@ IO14  SCK
 IO13  MOSI
 IO12  MISO
 ```
-![wiring](https://github.com/user-attachments/assets/355e2bc7-83c0-4814-930c-5a3256996608)
+<img src="https://github.com/user-attachments/assets/355e2bc7-83c0-4814-930c-5a3256996608" width="450" height="600">
 
 ## Casing
 
