@@ -37,13 +37,11 @@ IO14  SCK
 IO13  MOSI
 IO12  MISO
 ```
-BILD
+![wiring](https://github.com/user-attachments/assets/355e2bc7-83c0-4814-930c-5a3256996608)
 
 ## Casing
 
 ```/kwh_display/casing``` holds two STL files avalible for 3D printing the display casing.
-
-<!---BILD-->
 
 ## How-to
 
