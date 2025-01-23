@@ -6,7 +6,7 @@
 
 ## Features
 
-- Fetches electricity price data daily when available from an API <span style="float: right;"><a href="https://www.elprisetjustnu.se"><img src="https://ik.imagekit.io/ajdfkwyt/hva-koster-strommen/elpriser-tillhandahalls-av-elprisetjustnu_ttNExOIU_.png" alt="Elpriser tillhandahålls av Elpriset just nu.se" width="200" height="45"></a></span>.
+- Fetches electricity price data daily when available from an API. <span style="float: right;"><a href="https://www.elprisetjustnu.se"><img src="https://ik.imagekit.io/ajdfkwyt/hva-koster-strommen/elpriser-tillhandahalls-av-elprisetjustnu_ttNExOIU_.png" alt="Elpriser tillhandahålls av Elpriset just nu.se" width="200" height="45"></a></span>
 - Inspired by the project [PowerDisplayESPHome](https://github.com/johannyren/PowerDisplayESPHome) but developed without any backend dependencies.
 - Displays the current day's price alongside tomorrow's price.
 - Shows the electricity price in kWh/SEK for the current hour.
@@ -39,7 +39,7 @@ IO12  MISO
 
 ## ESP32
 
-To use *kwh_display*, start by cloning and then flashing the ESP32 with firmware `build-ESP32_GENERIC_250123.bin`, which is compiled from the [MicroPython](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) repository.
+To use *kwh_display*, start by flashing the ESP32 with firmware `build-ESP32_GENERIC_250123.bin`, which is compiled from the [MicroPython](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) repository.
 
 
 Erase and the flash the ESP32 using [esptool](https://github.com/espressif/esptool).
