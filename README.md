@@ -66,4 +66,8 @@ When the *kwh_display*  boots for the first time it will deploy a hotspot with t
 
 ## Known Limitations
 
-As of now, it is not possible to adjust the offset price according to power tariffs. Hopefully, this feature will be added in the future.
+Currently, it is not possible to adjust the offset price according to power tariffs. Additionally, it is not possible to customize the price levels (Billigt, Normalt, Dyrt) to your own preferences. Hopefully, this feature will be added in the future.
+
+## Development
+
+The *kwh_display* firmware is compiled from [MicroPython](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) using [mpbuild](https://github.com/mattytrentini/mpbuild). `/kwh_display/esp32` code has been “frozen” into the firmware to optimize memory allocation via the `/kwh_display/manifest.py` file. Drivers were developed by [peterhinch](https://github.com/peterhinch/micropython-nano-gui). The FTP server was developed by [robert-hh](https://github.com/robert-hh/FTP-Server-for-ESP8266-ESP32-and-PYBD).
