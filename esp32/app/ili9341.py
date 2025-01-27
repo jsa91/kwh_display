@@ -146,14 +146,15 @@ class GUI:
         refresh(self.ssd)
 
     def set_price(self, current_hour, prices_today):
-        # type: (int, dict) -> None
+        # type: (int, list) -> None
         """
         Set dynamical objects on the display, showing cost and price.
 
         Args:
             current_hour (int): Hour now
-            prices_today (dict): Spot prices current day
+            prices_today (list): Spot prices current day
         """
+
         price_levels = ("Billigt", "Normalt", "Dyrt")
 
         if prices_today[current_hour] < 0.5:
@@ -167,7 +168,10 @@ class GUI:
             price = price_levels[2]
 
         cost = prices_today[current_hour]
-        cost = "{:.1f}".format(cost) if cost >= 10 else "{:.2f}".format(cost)
+
+        cost = (
+            "{:.1f}".format(cost) if cost >= 10 or cost <= 0 else "{:.2f}".format(cost)
+        )
 
         self.color_label.value(text=price, fgcolor=color)
         self.price_label.value(text=cost)
