@@ -51,11 +51,11 @@ esptool.py --port /dev/ttyUSB0 erase_flash && esptool.py --chip esp32 --port /de
 Edit ```/kwh_display/config.json``` to match your preferred settings.
 
 **Please note that your WiFi password will be stored in plain text. Proceed with caution.**
-```python
+```json
 {
   "ssid": "YourSSID",
   "password": "YourPassword",
-  "zone": "SE3", # Bidding area
+  "zone": "SE3",
   "url": "http://www.elprisetjustnu.se",
   "api": "/api/v1/prices/"
 }
@@ -63,6 +63,19 @@ Edit ```/kwh_display/config.json``` to match your preferred settings.
 
 When the *kwh_display*  boots for the first time it will deploy a hotspot with the SSID `kwh_display` and host an FTP file server. Access the file server using your preferred method at `ftp://192.168.4.1/`. After adding `config.json` to the root of the file system, repower the device.
 
+## Troubleshooting
+If *kwh_display* does not boot correctly, connect the ESP32 to a serial console and analyze the output.
+
+```
+screen /dev/ttyUSB0 115200
+```
+The ESP32 has booted correctly if you see output similar to the following:
+
+```console
+Boot sequence completed @ <TIME>
+Free memory after running gc.collect(): <MEM>
+```
+If the boot sequence completes without errors, verify the display's function and wiring.
 
 ## Known Limitations
 
