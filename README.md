@@ -11,9 +11,7 @@
 - Displays the current day's price alongside tomorrow's price.
 - Shows the electricity price in kWh/SEK for the current hour.
 - Allows users to select a bidding area (SE 1-4).
-<!---
 - Allows users to customize the price interval.
--->
 
 This project aims to provide a standalone solution for monitoring electricity prices without relying on external services.
 
@@ -42,16 +40,16 @@ IO12  MISO
 
 ## ESP32
 
-To use *kwh_display*, start by flashing the ESP32 with firmware `build-ESP32_GENERIC_250127.bin`, which is compiled from the [MicroPython](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) repository.
+To use *kwh_display*, start by flashing the ESP32 with firmware `build-ESP32_GENERIC_250223.bin`, which is compiled from the [MicroPython](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) repository.
 
 
 Erase and the flash the ESP32 using [esptool](https://github.com/espressif/esptool).
 
 ```
-esptool.py --port /dev/ttyUSB0 erase_flash && esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 build-ESP32_GENERIC_250127.bin
+esptool.py --port /dev/ttyUSB0 erase_flash && esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 build-ESP32_GENERIC_250223.bin
 ```
-<!---
-Edit ```/kwh_display/config.json``` to match your preferred settings. You can customize the price interval to your preference (float). The default settings are explained in the table below.
+
+Edit ```/kwh_display/config.json``` to match your preferred settings. You can customize the price interval to your preference (float). The default price settings are explained in the table below.
 
 | Price    | Default            |
 | -------- | -------------------|
@@ -64,8 +62,8 @@ The case *Dyrt* is handled by an 'else' statement.
 **Please note that your WiFi password will be stored in plain text. Proceed with caution.**
 ```json
 {
-  "ssid": "linusgarden-IoT",
-  "password": "C5DT_F+BDXfsRuDd%8#6",
+  "ssid": "MySSID",
+  "password": "MyPassword",
   "zone": "SE3",
   "url": "http://www.elprisetjustnu.se",
   "api": "/api/v1/prices/",
@@ -73,21 +71,6 @@ The case *Dyrt* is handled by an 'else' statement.
   "normalt<": 1.5
 }
 ```
--->
-
-Edit ```/kwh_display/config.json``` to match your preferred settings.
-
-**Please note that your WiFi password will be stored in plain text. Proceed with caution.**
-```json
-{
-  "ssid": "YourSSID",
-  "password": "YourPassword",
-  "zone": "SE3",
-  "url": "http://www.elprisetjustnu.se",
-  "api": "/api/v1/prices/"
-}
-```
-
 When the *kwh_display*  boots for the first time it will deploy a hotspot with the SSID `kwh_display` and host an FTP file server. Access the file server using your preferred method at `ftp://192.168.4.1/`. After adding `config.json` to the root of the file system, repower the device.
 
 ## Troubleshooting
@@ -105,7 +88,7 @@ Free memory after running gc.collect(): <MEM>
 
 ## Known Limitations
 
-Currently, it is not possible to adjust the offset price according to power tariffs. Additionally, it is not possible to customize the price levels (Billigt, Normalt, Dyrt) to your own preferences. Hopefully, this feature will be added in the future.
+Currently, it is not possible to adjust the offset price according to power tariffs. Hopefully, this feature will be added in the future.
 
 ## Development
 
