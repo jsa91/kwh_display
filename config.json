@@ -3,5 +3,7 @@
   "password": "MyPassword",
   "zone": "SE3",
   "url": "http://www.elprisetjustnu.se",
-  "api": "/api/v1/prices/"
+  "api": "/api/v1/prices/",
+  "billigt<": 0.5,
+  "normalt<": 1.5
 }
