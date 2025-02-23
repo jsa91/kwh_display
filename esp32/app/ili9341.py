@@ -3,6 +3,7 @@ Initialise drivers for hardware ILI9341 display.
 """
 
 import cmath
+import ujson
 from gui.fonts import arial10, arial35, freesans20
 from gui.core.writer import CWriter
 from gui.core.fplot import CartesianGraph, TSequence
@@ -23,6 +24,10 @@ class GUI:
         """
         Constructor
         """
+
+        with open("config.json", "r") as f:
+            self.config = ujson.load(f)
+
         y_axis_division = [249, 225, 202, 179, 155]
         x_axis_division = [15, 30, 48, 66, 83, 98, 115, 133, 150, 168, 186, 204]
         arrows_division = [
@@ -125,6 +130,24 @@ class GUI:
             arrow_label = Label(self.wri, 279, arrow, "^", fgcolor=BLACK, align=2)
             self.arrows[f"arrow_{hour}"] = arrow_label
 
+    @staticmethod
+    def set_error():
+        # type: () -> None
+        """
+        Set config error message on the display.
+        """
+        refresh(ssd, True)
+
+        Label(
+            CWriter(ssd, arial35, RED, BLACK, verbose=False),
+            30,
+            15,
+            "Config Error!",
+            align=2,
+        )
+
+        refresh(ssd)
+
     def plot_prices(self, prices_today, prices_tomorrow):
         # type: (list, list) -> None
         """
@@ -157,15 +180,24 @@ class GUI:
 
         price_levels = ("Billigt", "Normalt", "Dyrt")
 
-        if prices_today[current_hour] < 0.5:
-            color = GREEN
-            price = price_levels[0]
-        elif 0.5 <= prices_today[current_hour] < 1.5:
-            color = YELLOW
-            price = price_levels[1]
-        else:
-            color = RED
-            price = price_levels[2]
+        try:
+            if prices_today[current_hour] < self.config["billigt<"]:
+                color = GREEN
+                price = price_levels[0]
+            elif (
+                self.config["billigt<"]
+                <= prices_today[current_hour]
+                < self.config["normalt<"]
+            ):
+                color = YELLOW
+                price = price_levels[1]
+            else:
+                color = RED
+                price = price_levels[2]
+        except (TypeError, KeyError, IndexError) as e:
+            print(f"Error in config file: {e}")
+            GUI.set_error()
+            raise
 
         cost = prices_today[current_hour]
 
@@ -205,25 +237,25 @@ class GUI:
         uv = lambda phi: cmath.rect(1, phi)
         pi = cmath.pi
         days = (
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday",
+            "Måndag",
+            "Tisdag",
+            "Onsdag",
+            "Torsdag",
+            "Fredag",
+            "Lördag",
+            "Söndag",
         )
         months = (
             "Jan",
             "Feb",
-            "March",
+            "Mar",
             "April",
-            "May",
-            "June",
-            "July",
+            "Maj",
+            "Juni",
+            "Juli",
             "Aug",
             "Sept",
-            "Oct",
+            "Okt",
             "Nov",
             "Dec",
         )

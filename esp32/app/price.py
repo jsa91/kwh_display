@@ -2,10 +2,10 @@
 Instantiates class to fetch spot prices.
 """
 
-from datetime import datetime, timedelta, timezone
 import urequests
 import ujson
 import machine
+from datetime import datetime, timedelta, timezone
 
 DAYS = (
     datetime.now(timezone(timedelta())),
@@ -43,6 +43,20 @@ class ElectricityPriceAPI:
             for day in DAYS
         ]
 
+    def get_url_tomorrow(self):
+        # type: () -> str
+        """
+        Get the URL for the API for tomorrow which causes desplay to reboot.
+
+        Returns:
+            str: A URL for fetching the electricity prices for tomorrow.
+
+        """
+
+        tomorrow = datetime.now(timezone(timedelta())) + timedelta(hours=24)
+
+        return f"{self.config['url']}{self.config['api']}{tomorrow.year:04}/{tomorrow.month:02}-{tomorrow.day:02}_{self.config['zone']}.json"
+
     def get_prices(self):
         # type: () -> None
         """
@@ -64,10 +78,12 @@ class ElectricityPriceAPI:
                             ]
                         }
                     )
+                    response.close()
                 else:
                     print(
-                        f"Failed to fetch JSON, status code: {response.status_code}\nPrices might not be published yet."
+                        f"Failed to fetch JSON, status code: {response.status_code}\nPrices might not be published yet or URL is incorrect."
                     )
+                    response.close()
                     continue
 
             except OSError as e:

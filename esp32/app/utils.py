@@ -9,12 +9,13 @@ This module includes functions to:
 - Update the display with current prices
 """
 
-from datetime import timedelta
 import ujson
 import network
 import ntptime
 import machine
 import urequests
+from datetime import timedelta
+from app.ili9341 import GUI
 
 
 def wifi():
@@ -28,8 +29,14 @@ def wifi():
     wlan.config(pm=0)
     wlan.config(txpower=20)
     if not wlan.isconnected():
-        with open("config.json", "r") as f:
-            config = ujson.load(f)
+        try:
+            with open("config.json", "r") as f:
+                config = ujson.load(f)
+        except ValueError as e:
+            print(f"Error reading config file: {e}")
+            GUI.set_error()
+            raise
+
         print(f"Connecting to {config['ssid']}...")
         wlan.connect(config["ssid"], config["password"])
         while not wlan.isconnected():
@@ -66,6 +73,7 @@ def ntp_sync():
         except OSError as e:
             print(f"Failed to sync time: {e}")
             machine.soft_reset()
+
 
 def fetch_prices_from_file(api, time):
     # type: (ElectricityPriceAPI, SweTime) -> tuple
@@ -115,6 +123,7 @@ def update_display(
 
     hour = swe_localtime.hour
     minute = swe_localtime.minute
+    second = swe_localtime.second
 
     if hour != current_hour:
         if hour == 0:
@@ -125,11 +134,13 @@ def update_display(
         gui.set_price(hour, prices_today)
         gui.set_arrow(hour)
 
+    # Checking if new prices are available.
     if hour >= 13 and prices_tomorrow is None:
-        print(f"Checking if new prices are available @ {hour}:{minute}...")
-        response = urequests.get(api.get_url()[1])
-        if response.status_code != 404:
-            print(f"New prices available, rebooting @ {hour}:{minute}...")
+        response = urequests.get(api.get_url_tomorrow())
+        if response.status_code == 200:
+            print(
+                f"New prices available, fetching from: {api.get_url_tomorrow()} and rebooting @ {hour}:{minute}:{second}..."
+            )
             machine.soft_reset()
         response.close()
 
