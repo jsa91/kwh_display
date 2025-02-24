@@ -237,13 +237,13 @@ class GUI:
         uv = lambda phi: cmath.rect(1, phi)
         pi = cmath.pi
         days = (
-            "Måndag",
+            "Mandag",
             "Tisdag",
             "Onsdag",
             "Torsdag",
             "Fredag",
-            "Lördag",
-            "Söndag",
+            "Lordag",
+            "Sondag",
         )
         months = (
             "Jan",

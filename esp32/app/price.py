@@ -64,6 +64,7 @@ class ElectricityPriceAPI:
         """
 
         send_to_file = []
+        failure_count = 0  # Initialize a counter for failures
 
         for request, day in zip(self.get_url(), DAYS):
             try:
@@ -84,10 +85,14 @@ class ElectricityPriceAPI:
                         f"Failed to fetch JSON, status code: {response.status_code}\nPrices might not be published yet or URL is incorrect."
                     )
                     response.close()
+                    failure_count += 1  # Increment the counter on failure
+                    if failure_count >= 2:
+                        print("Failed to fetch JSON twice, rebooting...")
+                        machine.soft_reset()
                     continue
 
             except OSError as e:
-                print(f"An error occurred while fetching JSON: {e}\nReseting...")
+                print(f"An error occurred while fetching JSON: {e}\nRebooting...")
                 machine.soft_reset()
 
         print(send_to_file)
