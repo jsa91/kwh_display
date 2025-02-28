@@ -11,7 +11,6 @@ This module includes functions to:
 
 import ujson
 import network
-import ntptime
 import machine
 import urequests
 from datetime import timedelta
@@ -56,23 +55,6 @@ def hotspot():
     while ap.active() is False:
         pass
     print(f"Access Point @ {ap.ifconfig()}")
-
-
-def ntp_sync():
-    # type: () -> None
-    """
-    Sync UTC time with NTP
-    """
-    print("Synchronizing time with NTP server...")
-    ntptime.timeout = 3
-    for _ in range(3):  # Try sync time three times before reset
-        try:
-            ntptime.settime()
-            print("UTC time synchronized successfully!")
-            return
-        except OSError as e:
-            print(f"Failed to sync time: {e}")
-            machine.soft_reset()
 
 
 def fetch_prices_from_file(api, time):
@@ -136,10 +118,10 @@ def update_display(
 
     # Checking if new prices are available.
     if hour >= 13 and prices_tomorrow is None:
-        response = urequests.get(api.get_url_tomorrow())
+        response = urequests.get(api.get_url_tomorrow(swe_localtime))
         if response.status_code == 200:
             print(
-                f"New prices available, fetching from: {api.get_url_tomorrow()} and rebooting @ {hour}:{minute}:{second}..."
+                f"New prices available, fetching from: {api.get_url_tomorrow(swe_localtime)} and rebooting @ {hour}:{minute}:{second}..."
             )
             machine.soft_reset()
         response.close()

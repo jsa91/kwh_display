@@ -1,6 +1,5 @@
 # kwh_display
 
-
 *kwh_display* is a project developed in MicroPython aimed at creating a compact display solution using an ESP32 and an ILI9341 screen. The primary functionality of this project is to fetch electricity price data via API and display it on the screen.
 
 ![IMG_2749](https://github.com/user-attachments/assets/1165a0df-f645-466b-9224-a323dd0af6c2)
@@ -41,13 +40,13 @@ IO12  MISO
 
 ## ESP32
 
-To use *kwh_display*, start by flashing the ESP32 with firmware `build-ESP32_GENERIC_250224.bin`, which is compiled from the [MicroPython](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) repository.
+To use *kwh_display*, start by flashing the ESP32 with firmware `build-ESP32_GENERIC_250228.bin`, which is compiled from the [MicroPython](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) repository.
 
 
 Erase and the flash the ESP32 using [esptool](https://github.com/espressif/esptool).
 
 ```
-esptool.py --port /dev/ttyUSB0 erase_flash && esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 build-ESP32_GENERIC_250224.bin
+esptool.py --port /dev/ttyUSB0 erase_flash && esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 build-ESP32_GENERIC_250228.bin
 ```
 
 Edit ```/kwh_display/config.json``` to match your preferred settings. You can customize the price interval to your preference (float). The default price settings are explained in the table below.

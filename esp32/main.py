@@ -31,12 +31,11 @@ def main():
 
     else:
         utils.wifi()
-        utils.ntp_sync()
 
         time = SweTime()
         current_hour = time.swe_localtime().hour
 
-        api = ElectricityPriceAPI()
+        api = ElectricityPriceAPI(time.swe_localtime())
         prices_today, prices_tomorrow = utils.fetch_prices_from_file(api, time)
 
         gui = GUI()

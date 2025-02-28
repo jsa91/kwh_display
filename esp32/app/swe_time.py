@@ -6,6 +6,8 @@ This module includes a class to:
 - Get the current local time in Sweden
 """
 
+import ntptime
+import machine
 from datetime import datetime, timezone, timedelta
 
 
@@ -20,12 +22,36 @@ class SweTime:
         Initialize the SweTime class and set the timezone.
         """
 
-        # Swedish timezone offset
+        print("Synchronizing time with NTP server...")
+        ntptime.timeout = 3
+        try:
+            ntptime.settime()
+            print("UTC time synchronized successfully!")
+        except OSError as e:
+            print(f"Failed to sync time: {e}")
+            machine.soft_reset()
+
+        now = datetime.now(timezone(timedelta()))
+
+        print(f"UTC time is: {now}")
+
+        # Determine if DST is in effect
+        self.offset = self._determine_offset(now)
+
+    def _determine_offset(self, now):
+        # type: (datetime) -> int
+        """
+        Determine the Swedish timezone offset considering DST.
+
+        Args:
+            now (datetime): The current datetime.
+
+        Returns:
+            int: The timezone offset.
+        """
         utc_offset = 1  # Standard time
         dst_offset = 2  # Daylight saving time
 
-        # Determine if DST is in effect
-        now = datetime.now(timezone(timedelta()))
         month, day = now.month, now.day
         weekday = now.weekday()
 
@@ -34,11 +60,9 @@ class SweTime:
             or (month == 3 and day - weekday >= 25)
             or (month == 10 and day - weekday < 25)
         ):
-            offset = dst_offset
+            return dst_offset
         else:
-            offset = utc_offset
-
-        self.offset = offset
+            return utc_offset
 
     def swe_localtime(self):
         # type: () -> datetime

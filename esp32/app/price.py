@@ -5,12 +5,7 @@ Instantiates class to fetch spot prices.
 import urequests
 import ujson
 import machine
-from datetime import datetime, timedelta, timezone
-
-DAYS = (
-    datetime.now(timezone(timedelta())),
-    datetime.now(timezone(timedelta())) + timedelta(hours=24),
-)
+from datetime import timedelta
 
 
 class ElectricityPriceAPI:
@@ -18,13 +13,15 @@ class ElectricityPriceAPI:
     Fetch spot prices.
     """
 
-    def __init__(self):
-        # type: () -> None
+    def __init__(self, swe_localtime):
+        # type: (datetime) -> None
         """
         Initialize the ElectricityPriceAPI instance by loading the configuration.
         """
         with open("config.json", "r") as f:
             self.config = ujson.load(f)
+
+        self.days = (swe_localtime, swe_localtime + timedelta(hours=24))
 
     def get_url(self):
         # type: () -> list
@@ -40,11 +37,11 @@ class ElectricityPriceAPI:
 
         return [
             f"{self.config['url']}{self.config['api']}{day.year:04}/{day.month:02}-{day.day:02}_{self.config['zone']}.json"
-            for day in DAYS
+            for day in self.days
         ]
 
-    def get_url_tomorrow(self):
-        # type: () -> str
+    def get_url_tomorrow(self, swe_localtime):
+        # type: (datetime) -> str
         """
         Get the URL for the API for tomorrow which causes desplay to reboot.
 
@@ -53,7 +50,7 @@ class ElectricityPriceAPI:
 
         """
 
-        tomorrow = datetime.now(timezone(timedelta())) + timedelta(hours=24)
+        tomorrow = swe_localtime + timedelta(hours=24)
 
         return f"{self.config['url']}{self.config['api']}{tomorrow.year:04}/{tomorrow.month:02}-{tomorrow.day:02}_{self.config['zone']}.json"
 
@@ -64,36 +61,32 @@ class ElectricityPriceAPI:
         """
 
         send_to_file = []
-        failure_count = 0  # Initialize a counter for failures
+        failure_count = 0
 
-        for request, day in zip(self.get_url(), DAYS):
-            try:
-                print(f"Fetching JSON from: {request}")
-                response = urequests.get(request)
+        for request, day in zip(self.get_url(), self.days):
 
-                if response.status_code == 200:
-                    send_to_file.append(
-                        {
-                            str((day.year, day.month, day.day)): [
-                                price["SEK_per_kWh"] for price in response.json()
-                            ]
-                        }
-                    )
-                    response.close()
-                else:
-                    print(
-                        f"Failed to fetch JSON, status code: {response.status_code}\nPrices might not be published yet or URL is incorrect."
-                    )
-                    response.close()
-                    failure_count += 1  # Increment the counter on failure
-                    if failure_count >= 2:
-                        print("Failed to fetch JSON twice, rebooting...")
-                        machine.soft_reset()
-                    continue
+            print(f"Fetching JSON from: {request}")
+            response = urequests.get(request)
 
-            except OSError as e:
-                print(f"An error occurred while fetching JSON: {e}\nRebooting...")
-                machine.soft_reset()
+            if response.status_code == 200:
+                send_to_file.append(
+                    {
+                        str((day.year, day.month, day.day)): [
+                            price["SEK_per_kWh"] for price in response.json()
+                        ]
+                    }
+                )
+                response.close()
+            else:
+                print(
+                    f"Failed to fetch JSON, status code: {response.status_code}\nPrices might not be published yet or URL is incorrect."
+                )
+                response.close()
+                failure_count += 1  # Increment the counter on failure
+                if failure_count == 2:
+                    print("Failed to fetch JSON twice, rebooting...")
+                    machine.soft_reset()
+                continue
 
         print(send_to_file)
         with open("prices.json", "a") as f:
