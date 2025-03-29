@@ -4,6 +4,7 @@ Initialise drivers for hardware ILI9341 display.
 
 import cmath
 import ujson
+import sys
 from gui.fonts import arial10, arial35, freesans20
 from gui.core.writer import CWriter
 from gui.core.fplot import CartesianGraph, TSequence
@@ -131,19 +132,27 @@ class GUI:
             self.arrows[f"arrow_{hour}"] = arrow_label
 
     @staticmethod
-    def set_error():
+    def set_error(e):
         # type: () -> None
         """
-        Set config error message on the display.
+        Set error message on the display.
         """
         refresh(ssd, True)
 
         Label(
-            CWriter(ssd, arial35, RED, BLACK, verbose=False),
-            30,
-            15,
-            "Config Error!",
+            CWriter(ssd, freesans20, RED, BLACK, verbose=False),
+            2,
+            71,
+            "ERROR!",
             align=2,
+        )
+
+        Label(
+            CWriter(ssd, arial10, WHITE, BLACK, verbose=False),
+            30,
+            5,
+            str(e),
+            align=0,
         )
 
         refresh(ssd)
@@ -196,7 +205,7 @@ class GUI:
                 price = price_levels[2]
         except (TypeError, KeyError, IndexError) as e:
             print(f"Error in config file: {e}")
-            GUI.set_error()
+            GUI.set_error(e)
             raise
 
         cost = prices_today[current_hour]

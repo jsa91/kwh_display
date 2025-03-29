@@ -33,7 +33,7 @@ def wifi():
                 config = ujson.load(f)
         except ValueError as e:
             print(f"Error reading config file: {e}")
-            GUI.set_error()
+            GUI.set_error(e)
             raise
 
         print(f"Connecting to {config['ssid']}...")
@@ -118,12 +118,16 @@ def update_display(
 
     # Checking if new prices are available.
     if hour >= 13 and prices_tomorrow is None:
-        response = urequests.get(api.get_url_tomorrow(swe_localtime))
-        if response.status_code == 200:
-            print(
-                f"New prices available, fetching from: {api.get_url_tomorrow(swe_localtime)} and rebooting @ {hour}:{minute}:{second}..."
-            )
+        try:
+            response = urequests.get(api.get_url_tomorrow(swe_localtime))
+            if response.status_code == 200:
+                print(
+                    f"New prices available, fetching from: {api.get_url_tomorrow(swe_localtime)} and rebooting @ {hour}:{minute}:{second}..."
+                )
+                machine.soft_reset()
+            response.close()
+        except OSError as e:
+            print(f"Connection failed: {e}\nRebooting...")
             machine.soft_reset()
-        response.close()
 
     return hour, prices_today, prices_tomorrow
