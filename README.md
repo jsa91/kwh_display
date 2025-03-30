@@ -40,13 +40,13 @@ IO12  MISO
 
 ## ESP32
 
-To use *kwh_display*, start by flashing the ESP32 with firmware `build-ESP32_GENERIC_250228.bin`, which is compiled from the [MicroPython](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) repository.
+To use *kwh_display*, start by flashing the ESP32 with firmware `build-ESP32_GENERIC_250330.bin`, which is compiled from the [MicroPython](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) repository.
 
 
 Erase and the flash the ESP32 using [esptool](https://github.com/espressif/esptool).
 
 ```
-esptool.py --port /dev/ttyUSB0 erase_flash && esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 build-ESP32_GENERIC_250228.bin
+esptool.py --port /dev/ttyUSB0 erase_flash && esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 build-ESP32_GENERIC_250330.bin
 ```
 
 Edit ```/kwh_display/config.json``` to match your preferred settings. You can customize the price interval to your preference (float). The default price settings are explained in the table below.
@@ -74,7 +74,7 @@ The case *Dyrt* is handled by an 'else' statement.
 When the *kwh_display*  boots for the first time it will deploy a hotspot with the SSID `kwh_display` and host an FTP file server. Access the file server using your preferred method at `ftp://192.168.4.1/`. After adding `config.json` to the root of the file system, repower the device.
 
 ## Troubleshooting
-If *kwh_display* does not boot correctly or if `Config Error!` is showing on the display, connect the ESP32 to a serial console. Reboot and analyze the output.
+If *kwh_display* does not boot correctly or if `Error!` is showing on the display, connect the ESP32 to a serial console. Reboot and analyze the output.
 
 ```
 screen /dev/ttyUSB0 115200
