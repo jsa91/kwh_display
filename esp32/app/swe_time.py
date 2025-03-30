@@ -55,14 +55,20 @@ class SweTime:
         month, day = now.month, now.day
         weekday = now.weekday()
 
-        if (
-            (month > 3 and month < 10)
-            or (month == 3 and day - weekday >= 25)
-            or (month == 10 and day - weekday < 25)
-        ):
-            return dst_offset
-        else:
-            return utc_offset
+        # FIXME: Correct DST calculation.
+        # if (
+        #     (month > 3 and month < 10)
+        #     or (month == 3 and day - weekday >= 25)
+        #     or (month == 10 and day - weekday < 25)
+        # ):
+        #     print("Daylight saving time is in effect.")
+        #     return dst_offset
+        # else:
+        #     print("Standard time is in effect.")
+        #     return utc_offset
+
+        print("Daylight saving time is in effect.")
+        return dst_offset
 
     def swe_localtime(self):
         # type: () -> datetime
