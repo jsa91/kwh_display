@@ -40,13 +40,13 @@ IO12  MISO
 
 ## ESP32
 
-To use *kwh_display*, start by flashing the ESP32 with firmware `build-ESP32_GENERIC_250330.bin`, which is compiled from the [MicroPython](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) repository.
+To use *kwh_display*, start by flashing the ESP32 with firmware `build-ESP32_GENERIC_250618.bin`, which is compiled from the [MicroPython](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) repository.
 
 
 Erase and the flash the ESP32 using [esptool](https://github.com/espressif/esptool).
 
 ```
-esptool.py --port /dev/ttyUSB0 erase_flash && esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 build-ESP32_GENERIC_250330.bin
+esptool.py --port /dev/ttyUSB0 erase_flash && esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 build-ESP32_GENERIC_250618.bin
 ```
 
 Edit ```/kwh_display/config.json``` to match your preferred settings. You can customize the price interval to your preference (float). The default price settings are explained in the table below.
