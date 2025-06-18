@@ -31,46 +31,21 @@ class SweTime:
             print(f"Failed to sync time: {e}")
             machine.soft_reset()
 
-        now = datetime.now(timezone(timedelta()))
+        print(f"UTC time is: {datetime.now(timezone(timedelta()))}")
 
-        print(f"UTC time is: {now}")
-
-        # Determine if DST is in effect
-        self.offset = self._determine_offset(now)
-
-    def _determine_offset(self, now):
-        # type: (datetime) -> int
+    @staticmethod
+    def utc_time():
+        # type: () -> datetime
         """
-        Determine the Swedish timezone offset considering DST.
-
-        Args:
-            now (datetime): The current datetime.
+        Get the current UTC time.
 
         Returns:
-            int: The timezone offset.
+            datetime: The current UTC time.
         """
-        utc_offset = 1  # Standard time
-        dst_offset = 2  # Daylight saving time
+        return datetime.now(timezone(timedelta()))
 
-        month, day = now.month, now.day
-        weekday = now.weekday()
-
-        # FIXME: Correct DST calculation.
-        # if (
-        #     (month > 3 and month < 10)
-        #     or (month == 3 and day - weekday >= 25)
-        #     or (month == 10 and day - weekday < 25)
-        # ):
-        #     print("Daylight saving time is in effect.")
-        #     return dst_offset
-        # else:
-        #     print("Standard time is in effect.")
-        #     return utc_offset
-
-        print("Daylight saving time is in effect.")
-        return dst_offset
-
-    def swe_localtime(self):
+    @staticmethod
+    def swe_localtime(dst_offset):
         # type: () -> datetime
         """
         Get the current local time in Sweden.
@@ -78,4 +53,5 @@ class SweTime:
         Returns:
             datetime: The current local time in Sweden.
         """
-        return datetime.now(timezone(timedelta(hours=self.offset)))
+
+        return datetime.now(timezone(timedelta(hours=dst_offset)))

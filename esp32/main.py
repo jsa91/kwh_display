@@ -31,13 +31,12 @@ def main():
 
     else:
         utils.wifi()
-
         time = SweTime()
-        current_hour = time.swe_localtime().hour
 
-        api = ElectricityPriceAPI(time.swe_localtime())
-        prices_today, prices_tomorrow = utils.fetch_prices_from_file(api, time)
+        api = ElectricityPriceAPI(time.utc_time())
+        prices_today, prices_tomorrow, dst_offset = api.get_prices(time.utc_time())
 
+        current_hour = time.swe_localtime(dst_offset).hour
         gui = GUI()
         gui.plot_prices(prices_today, prices_tomorrow)
         gui.set_price(current_hour, prices_today)
@@ -47,7 +46,7 @@ def main():
         )
 
         print(
-            f"Boot sequence completed @ {time.swe_localtime().year}-{time.swe_localtime().month}-{time.swe_localtime().day} {time.swe_localtime().hour}:{time.swe_localtime().minute}:{time.swe_localtime().second}"
+            f"Boot sequence completed @ {time.swe_localtime(dst_offset).year}-{time.swe_localtime(dst_offset).month}-{time.swe_localtime(dst_offset).day} {time.swe_localtime(dst_offset).hour}:{time.swe_localtime(dst_offset).minute}:{time.swe_localtime(dst_offset).second}"
         )
 
         gc.collect()
@@ -57,18 +56,22 @@ def main():
             hrs.value(
                 hstart
                 * uv(
-                    -time.swe_localtime().hour * pi / 6
-                    - time.swe_localtime().minute * pi / 360
+                    -time.swe_localtime(dst_offset).hour * pi / 6
+                    - time.swe_localtime(dst_offset).minute * pi / 360
                 ),
                 YELLOW,
             )
-            mins.value(mstart * uv(-time.swe_localtime().minute * pi / 30), YELLOW)
-            secs.value(sstart * uv(-time.swe_localtime().second * pi / 30), RED)
+            mins.value(
+                mstart * uv(-time.swe_localtime(dst_offset).minute * pi / 30), YELLOW
+            )
+            secs.value(
+                sstart * uv(-time.swe_localtime(dst_offset).second * pi / 30), RED
+            )
             dial.text(
                 "{} {} {}".format(
-                    days[time.swe_localtime().weekday()],
-                    time.swe_localtime().day,
-                    months[time.swe_localtime().month - 1],
+                    days[time.swe_localtime(dst_offset).weekday()],
+                    time.swe_localtime(dst_offset).day,
+                    months[time.swe_localtime(dst_offset).month - 1],
                 )
             )
             refresh(ssd)
@@ -79,7 +82,7 @@ def main():
                 prices_tomorrow,
                 current_hour,
                 api,
-                time.swe_localtime(),
+                time.swe_localtime(dst_offset),
             )
             pytime.sleep(1)
 

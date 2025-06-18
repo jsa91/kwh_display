@@ -57,33 +57,6 @@ def hotspot():
     print(f"Access Point @ {ap.ifconfig()}")
 
 
-def fetch_prices_from_file(api, time):
-    # type: (ElectricityPriceAPI, SweTime) -> tuple
-    """
-    Fetch prices from the file.
-
-    Args:
-        api (ElectricityPriceAPI): The API instance to fetch prices.
-
-    Returns:
-        tuple: A tuple containing prices for today and tomorrow.
-    """
-    api.get_prices()
-
-    with open("prices.json", "r") as f:
-        prices = ujson.load(f)
-
-    current_time = time.swe_localtime()
-    today = (current_time.year, current_time.month, current_time.day)
-    h24_offset = current_time + timedelta(hours=24)
-    tomorrow = (h24_offset.year, h24_offset.month, h24_offset.day)
-
-    prices_today = prices[0][str(today)] if prices[0] else None
-    prices_tomorrow = prices[1][str(tomorrow)] if len(prices) > 1 else None
-
-    return prices_today, prices_tomorrow
-
-
 def update_display(
     gui, prices_today, prices_tomorrow, current_hour, api, swe_localtime
 ):
