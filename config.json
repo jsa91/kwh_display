@@ -5,5 +5,7 @@
   "url": "http://www.elprisetjustnu.se",
   "api": "/api/v1/prices/",
   "billigt<": 0.5,
-  "normalt<": 1.5
+  "normalt<": 1.5,
+  "add_fees": false,
+  "fees": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 }
