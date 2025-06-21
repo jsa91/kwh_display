@@ -37,7 +37,7 @@ class ElectricityPriceAPI:
             for day in self.days
         ]
 
-    def get_url_tomorrow(self, utc_time):
+    def get_url_tomorrow(self, swe_localtime):
         # type: (datetime) -> str
         """
         Get the URL for the API for tomorrow which causes desplay to reboot.
@@ -47,7 +47,7 @@ class ElectricityPriceAPI:
 
         """
 
-        tomorrow = utc_time + utc_time(hours=24)
+        tomorrow = swe_localtime + timedelta(hours=24)
 
         return f"{self.config['url']}{self.config['api']}{tomorrow.year:04}/{tomorrow.month:02}-{tomorrow.day:02}_{self.config['zone']}.json"
 
