@@ -1,3 +1,8 @@
+:warning: :warning: :warning: :warning: :warning: :warning: 
+# From Oct 1, prices update every 15 min (not hourly) which affects the API. This change is breaking; fix is in progress.
+:warning: :warning: :warning: :warning: :warning: :warning: 
+
+
 # kwh_display
 
 *kwh_display* is a project developed in MicroPython aimed at creating a compact display solution using an ESP32 and an ILI9341 screen. The primary functionality of this project is to fetch electricity price data via API and display it on the screen.
