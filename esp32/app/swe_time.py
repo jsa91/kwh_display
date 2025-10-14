@@ -8,6 +8,7 @@ This module includes a class to:
 
 import ntptime
 import machine
+import time
 from datetime import datetime, timezone, timedelta
 
 
@@ -29,6 +30,7 @@ class SweTime:
             print("UTC time synchronized successfully!")
         except OSError as e:
             print(f"Failed to sync time: {e}")
+            time.sleep(3)
             machine.soft_reset()
 
         print(f"UTC time is: {datetime.now(timezone(timedelta()))}")
@@ -46,7 +48,7 @@ class SweTime:
 
     @staticmethod
     def swe_localtime(dst_offset):
-        # type: () -> datetime
+        # type: (int) -> datetime
         """
         Get the current local time in Sweden.
 

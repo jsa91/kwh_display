@@ -13,7 +13,6 @@ import ujson
 import network
 import machine
 import urequests
-from datetime import timedelta
 from app.ili9341 import GUI
 
 
@@ -40,6 +39,7 @@ def wifi():
         wlan.connect(config["ssid"], config["password"])
         while not wlan.isconnected():
             pass
+
     print(f"Connected! {wlan.ifconfig()}")
 
 
@@ -58,7 +58,7 @@ def hotspot():
 
 
 def update_display(
-    gui, prices_today, prices_tomorrow, current_hour, api, swe_localtime
+    gui, prices_today, prices_tomorrow, current_15min, api, swe_localtime
 ):
     # type: (GUI, dict, dict, int, ElectricityPriceAPI, datetime) -> int
     """
@@ -79,14 +79,15 @@ def update_display(
     hour = swe_localtime.hour
     minute = swe_localtime.minute
     second = swe_localtime.second
+    upcoming_15min = (hour * 4) + (minute // 15)
 
-    if hour != current_hour:
-        if hour == 0:
+    if upcoming_15min != current_15min:
+        if upcoming_15min == 0:
             prices_today = prices_tomorrow
             prices_tomorrow = None
             gui.plot_prices(prices_today, prices_tomorrow)
 
-        gui.set_price(hour, prices_today)
+        gui.set_price(upcoming_15min, prices_today)
         gui.set_arrow(hour)
 
     # Checking if new prices are available.
@@ -95,7 +96,7 @@ def update_display(
             response = urequests.get(api.get_url_tomorrow(swe_localtime))
             if response.status_code == 200:
                 print(
-                    f"New prices available, fetching from: {api.get_url_tomorrow(swe_localtime)} and rebooting @ {hour}:{minute}:{second}..."
+                    f"New prices available, rebooting and fetching from: {api.get_url_tomorrow(swe_localtime)} @ {hour}:{minute}:{second}..."
                 )
                 machine.soft_reset()
             response.close()
@@ -103,4 +104,4 @@ def update_display(
             print(f"Connection failed: {e}\nRebooting...")
             machine.soft_reset()
 
-    return hour, prices_today, prices_tomorrow
+    return upcoming_15min, prices_today, prices_tomorrow

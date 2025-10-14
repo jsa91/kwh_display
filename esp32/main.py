@@ -23,6 +23,7 @@ def main():
     Initialise classes for fetching spot prices and displaying objects.
     Run scheduling with clock.
     """
+
     if "config.json" not in os.listdir():
         utils.hotspot()
         from ftp import uftpd
@@ -36,11 +37,20 @@ def main():
         api = ElectricityPriceAPI(time.utc_time())
         prices_today, prices_tomorrow, dst_offset = api.get_prices(time.utc_time())
 
-        current_hour = time.swe_localtime(dst_offset).hour
+        print(
+            f"Time offset today is {dst_offset} hours, {'DST is effect.' if dst_offset == 2 else 'CET in effect.'}"
+        )
+
+        print("Preparing display...")
+
+        # Calculate current 15-minute interval (0-95)
+        current_time = time.swe_localtime(dst_offset)
+        current_15min = (current_time.hour * 4) + (current_time.minute // 15)
+
         gui = GUI()
         gui.plot_prices(prices_today, prices_tomorrow)
-        gui.set_price(current_hour, prices_today)
-        gui.set_arrow(current_hour)
+        gui.set_price(current_15min, prices_today)
+        gui.set_arrow(current_time.hour)
         uv, pi, days, months, dial, hrs, mins, secs, hstart, mstart, sstart = (
             gui.set_clock()
         )
@@ -76,11 +86,11 @@ def main():
             )
             refresh(ssd)
 
-            current_hour, prices_today, prices_tomorrow = utils.update_display(
+            current_15min, prices_today, prices_tomorrow = utils.update_display(
                 gui,
                 prices_today,
                 prices_tomorrow,
-                current_hour,
+                current_15min,
                 api,
                 time.swe_localtime(dst_offset),
             )

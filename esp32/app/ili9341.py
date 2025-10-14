@@ -4,7 +4,6 @@ Initialise drivers for hardware ILI9341 display.
 
 import cmath
 import ujson
-import sys
 from gui.fonts import arial10, arial35, freesans20
 from gui.core.writer import CWriter
 from gui.core.fplot import CartesianGraph, TSequence
@@ -104,8 +103,8 @@ class GUI:
             xdivs=12,
             ydivs=12,
         )
-        self.ts_red = TSequence(self.graph, RED, 24, 0, 5)
-        self.ts_yellow = TSequence(self.graph, YELLOW, 24, 0, 5)
+        self.ts_red = TSequence(self.graph, RED, 96, 0, 5)
+        self.ts_yellow = TSequence(self.graph, YELLOW, 96, 0, 5)
         self.color_label = Label(
             CWriter(self.ssd, arial35, GREEN, BLACK, verbose=False),
             40,
@@ -133,7 +132,7 @@ class GUI:
 
     @staticmethod
     def set_error(e):
-        # type: () -> None
+        # type: (Exception) -> None
         """
         Set error message on the display.
         """
@@ -177,7 +176,7 @@ class GUI:
 
         refresh(self.ssd)
 
-    def set_price(self, current_hour, prices_today):
+    def set_price(self, current_15min, prices_today):
         # type: (int, list) -> None
         """
         Set dynamical objects on the display, showing cost and price.
@@ -190,12 +189,12 @@ class GUI:
         price_levels = ("Billigt", "Normalt", "Dyrt")
 
         try:
-            if prices_today[current_hour] < self.config["billigt<"]:
+            if prices_today[current_15min] < self.config["billigt<"]:
                 color = GREEN
                 price = price_levels[0]
             elif (
                 self.config["billigt<"]
-                <= prices_today[current_hour]
+                <= prices_today[current_15min]
                 < self.config["normalt<"]
             ):
                 color = YELLOW
@@ -208,7 +207,7 @@ class GUI:
             GUI.set_error(e)
             raise
 
-        cost = prices_today[current_hour]
+        cost = prices_today[current_15min]
 
         cost = (
             "{:.1f}".format(cost) if cost >= 10 or cost <= 0 else "{:.2f}".format(cost)
