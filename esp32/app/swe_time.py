@@ -23,9 +23,10 @@ class SweTime:
         Initialize the SweTime class and set the timezone.
         """
 
-        print("Synchronizing time with NTP server...")
-        ntptime.timeout = 3
+        ntptime.host = "ntp.netnod.se"
+        ntptime.timeout = 5
         try:
+            print(f"Synchronizing time with {ntptime.host}...")
             ntptime.settime()
             print("UTC time synchronized successfully!")
         except OSError as e:

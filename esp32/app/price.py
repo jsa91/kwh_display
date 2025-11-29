@@ -5,7 +5,10 @@ Instantiates class to fetch spot prices.
 import ujson
 import machine
 import gc
+import os
 import urequests
+import time as pytime
+from app.ili9341 import GUI
 from datetime import timedelta
 
 
@@ -88,7 +91,15 @@ class ElectricityPriceAPI:
         for url, day in zip(self.get_url(), self.days):
 
             print(f"Fetching JSON from: {url}")
-            response = urequests.get(url)
+            try:
+                response = urequests.get(url)
+            except OSError as e:
+                GUI.set_error(e)
+                print(
+                    f"Failed to obtain an HTTPS connection (OSError: {e}), retrying in 5 seconds..."
+                )
+                pytime.sleep(5)
+                machine.soft_reset()
 
             if response.status_code == 200:
                 data = response.json()
@@ -150,12 +161,14 @@ class ElectricityPriceAPI:
     def _from_file(self):
         # type: () -> tuple
         """
-        Read electricity prices and DST offset from JSON files.
+        Read electricity prices and DST offset from JSON files and delete them after reading.
 
         This method reads the previously saved data from the filesystem:
         - prices_today.json: Today's electricity prices (list of floats)
         - prices_tomorrow.json: Tomorrow's electricity prices (list of floats)
         - dst_offset.json: Current DST offset in hours (int)
+
+        After successfully reading each file, it is deleted to free up storage space.
 
         Returns:
             tuple: (prices_today, prices_tomorrow, dst_offset)
@@ -167,18 +180,21 @@ class ElectricityPriceAPI:
         try:
             with open("prices_today.json", "r") as f:
                 prices_today = ujson.load(f)
+            os.remove("prices_today.json")
         except (OSError, ValueError):
             prices_today = None
 
         try:
             with open("prices_tomorrow.json", "r") as f:
                 prices_tomorrow = ujson.load(f)
+            os.remove("prices_tomorrow.json")
         except (OSError, ValueError):
             prices_tomorrow = None
 
         try:
             with open("dst_offset.json", "r") as f:
                 dst_offset = ujson.load(f)
+            os.remove("dst_offset.json")
         except (OSError, ValueError):
             dst_offset = 1  # Fallback to CET
             print("Could not read dst_offset.json, using CET fallback (UTC+1)")
